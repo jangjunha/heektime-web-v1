@@ -14,6 +14,9 @@ export default {
   SET_ME: (state, { me }) => {
     state.me = me;
   },
+  UNSET_ME: (state) => {
+    state.me = null;
+  },
   SET_USER: (state, { user }) => {
     Vue.set(state.users, user.id, user);
   },

@@ -22,6 +22,10 @@ export default {
       commit('SET_ME', { me });
       return Promise.resolve();
     }),
+  LOGOUT: ({ commit }) => {
+    commit('UNSET_ME');
+    return Promise.resolve();
+  },
   FETCH_USER_BY_USERNAME: ({ commit }, { username }) => UserAPI.getUserByUsername(username)
     .then((user) => {
       commit('SET_USERNAME', { username, user_id: user.id });

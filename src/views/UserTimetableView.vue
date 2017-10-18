@@ -59,13 +59,16 @@
     },
     computed: {
       editable() {
+//        console.log(this.timetable.user);
+//        console.log(this.$store.me);
         return this.timetable.user.id === this.$store.state.me.id;
       },
       username() {
         return this.$route.params.username;
       },
       user() {
-        return this.$store.state.usernames[this.username];
+        const userId = this.$store.state.usernames[this.username];
+        return this.$store.state.users[userId];
       },
       timetableId() {
         return this.$route.params.timetable_id;
@@ -129,15 +132,9 @@
       deleteLecture(lectureId) {
         this.$store.dispatch('DELETE_LECTURE_FROM_TIMETABLE', { timetableId: this.timetableId, lectureId });
       },
-      refreshUsernameMap() {
-        this.$store.dispatch('FETCH_USER_BY_USERNAME', { username: this.username });
-      },
       refreshTimetable() {
-        if (!this.user) return;
-
         // TODO: FETCH_USER_TIMETABLE (not all timetableS)
-        this.$store.dispatch('FETCH_USER_TIMETABLES', { user_id: this.user.id })
-          .then(() => this.refreshLectures());
+        this.$store.dispatch('FETCH_USER_TIMETABLES', { user_id: this.user.id });
       },
       refreshLectures() {
         if (!this.semester) return;
@@ -145,9 +142,6 @@
       },
     },
     watch: {
-      username() {
-        this.refreshUsernameMap();
-      },
       timetableId() {
         this.refreshTimetable();
       },
@@ -156,8 +150,6 @@
       },
     },
     created() {
-      this.$store.dispatch('FETCH_ME');
-      this.refreshTimetable();
     },
   };
 </script>
@@ -183,6 +175,10 @@
       flex: 1;
 
       min-width: 500px;
+
+      .timetable {
+        height: 100%;
+      }
     }
 
     .section-search {

@@ -10,7 +10,7 @@ const debug = process.env.NODE_ENV !== 'production';
 
 export default new Vuex.Store({
   state: {
-    me: {/* User */},
+    me: null,  // User
     usernames: {/* [username: string]: [user_id: string] */},
     users: {/* [id: string]: User */},
     schools: {/* [id: string]: School  */},

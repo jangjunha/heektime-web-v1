@@ -11,6 +11,11 @@
 <script>
 export default {
   name: 'app',
+  created() {
+    if (window.localStorage.getItem('access_token') !== null) {
+      this.$store.dispatch('FETCH_ME');
+    }
+  },
 };
 </script>
 
