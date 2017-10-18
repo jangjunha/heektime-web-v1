@@ -1,19 +1,21 @@
 <template>
   <div class="col" :class="{ 'header-col': header }">
     <timetable-row header :header-val="headerVal"></timetable-row>
-    <timetable-row v-for="n in 10" :key="'row-' + n" :header-val="header ? (n + 8) : null"></timetable-row>
+    <div class="times-wrapper">
+      <timetable-row class="row-time" v-for="hour in hours" :key="'row-' + hour" :header-val="header ? hour : null"></timetable-row>
 
-    <!-- Size guide for items -->
-    <div class="items-wrapper">
-      <timetable-item
-        v-for="item in allItems"
-        :key="'item-' + item.weekday + '-' + item.timeBegin + item.timeEnd"
-        :item="item"
-        :style="styleFor(item)"
-        :class="{ preview: item.preview, overlapped: item.preview && isOverlap(item) }"
-        :editable="editable"
-        @delete="$emit('delete-lecture', item.lecture.id)"
-      ></timetable-item>
+      <!-- Size guide for items -->
+      <div class="items-wrapper" :style="{ height: `${100 / timeRows}%` }">
+        <timetable-item
+          v-for="item in allItems"
+          :key="'item-' + item.weekday + '-' + item.timeBegin + item.timeEnd"
+          :item="item"
+          :style="styleFor(item)"
+          :class="{ preview: item.preview, overlapped: item.preview && isOverlap(item) }"
+          :editable="editable"
+          @delete="$emit('delete-lecture', item.lecture.id)"
+        ></timetable-item>
+      </div>
     </div>
   </div>
 </template>
@@ -50,9 +52,18 @@
       },
     },
     data() {
-      return { beginTime: 540 };
+      return {
+        beginTime: 540,
+        timeRows: 10,
+      };
     },
     computed: {
+      hours() {
+        return Array(this.timeRows).fill().map((_, i) => (this.beginTime / 60) + i);
+      },
+      wrapperHeight() {
+
+      },
       allItems() {
         return [...this.items, ...this.previewItems.map(item => ({ ...item, preview: true }))];
       },
@@ -69,7 +80,7 @@
           left: 0,
           right: 0,
           top: this.toPercent(this.toRelative(item.timeBegin)),
-          height: this.toPercent(item.timeEnd - item.timeBegin),
+          height: `calc(${this.toPercent(item.timeEnd - item.timeBegin)} + 1px)`,
         };
       },
       isOverlap(targetItem) {
@@ -85,14 +96,29 @@
   @import '~styles/settings-timetable.scss';
 
   .col {
-    position: relative;
+    display: flex;
+    flex-direction: column;
 
-    .items-wrapper {
-      height: $timetable-time-height;
-      position: absolute;
-      top: $header-height + 1; // border size
-      left: 0;
-      right: 0;
+    .times-wrapper {
+      flex: 1;
+
+      display: flex;
+      flex-direction: column;
+      position: relative;
+
+      .row-time {
+        flex: 1;
+        border-top: 1px solid $grid-color;
+      }
+
+      .items-wrapper {
+        top: 0;
+        left: 0;
+        right: 0;
+        position: absolute;
+        margin-top: 1px;
+        box-sizing: border-box;
+      }
     }
   }
 </style>

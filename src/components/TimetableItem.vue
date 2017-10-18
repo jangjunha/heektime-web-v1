@@ -41,6 +41,7 @@
   .timetable-item {
     padding: 4px;
     border: 1px solid #ccc;
+    box-sizing: border-box;
     background-color: #f8f8f8;
     overflow: hidden;
     word-break: break-all;

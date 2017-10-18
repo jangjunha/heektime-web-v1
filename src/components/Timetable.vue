@@ -70,11 +70,10 @@
   @import '~styles/settings-timetable.scss';
 
   .timetable {
-    $grid-color: #e4e4e4;
-
     border: 1px solid #ccc;
     display: flex;
     flex-direction: row;
+    min-height: 480px;
 
     font-size: 10pt;
 
@@ -94,12 +93,7 @@
     }
 
     .row {
-      height: $timetable-time-height;
       display: flex;
-
-      &:not(:first-child) {
-        border-top: 1px solid $grid-color;
-      }
     }
 
     .header-col {
@@ -111,7 +105,7 @@
     }
 
     .header-row {
-      max-height: $header-height;
+      height: $header-height;
 
       align-items: center;
       justify-content: center;
