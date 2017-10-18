@@ -47,18 +47,9 @@
       },
     },
     methods: {
-      showOption(val) {
-        if (this.disabled) {
-          return;
-        }
-
-        this.open = val;
-      },
       selectOption(option) {
         this.selected = option;
         this.$emit('change', this.selected);
-
-        this.open = false;
       },
     },
     watch: {
