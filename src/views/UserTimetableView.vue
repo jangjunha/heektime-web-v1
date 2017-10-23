@@ -10,7 +10,7 @@
         @delete-lecture="(lecture) => deleteLecture(lecture)"
       ></timetable>
     </div>
-    <div class="section-search">
+    <div class="section-search" v-if="editable">
       <search-lecture
         :lectures="lectures"
         :filled-times="filledTimes"
@@ -59,8 +59,7 @@
     },
     computed: {
       editable() {
-//        console.log(this.timetable.user);
-//        console.log(this.$store.me);
+        if (this.$store.state.me === null || !this.timetable) return false;
         return this.timetable.user.id === this.$store.state.me.id;
       },
       username() {
@@ -137,7 +136,6 @@
         this.$store.dispatch('FETCH_USER_TIMETABLES', { user_id: this.user.id });
       },
       refreshLectures() {
-        if (!this.semester) return;
         this.$store.dispatch('FETCH_SEMESTER_LECTURES', { semesterId: this.semester.id });
       },
     },
@@ -145,11 +143,14 @@
       timetableId() {
         this.refreshTimetable();
       },
-      timetable() {
+      semester() {
         this.refreshLectures();
       },
     },
     created() {
+      if (this.semester) {
+        this.refreshLectures();
+      }
     },
   };
 </script>
@@ -166,6 +167,11 @@
       overflow-y: scroll;
     }
 
+    .section-timetable {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
     .timetable {
       width: 100%;
       box-sizing: border-box;
@@ -178,6 +184,7 @@
 
       .timetable {
         height: 100%;
+        min-height: 600px;
       }
     }
 

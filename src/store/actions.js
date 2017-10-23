@@ -8,8 +8,10 @@ export default {
     }),
   FETCH_SEMESTER_LECTURES: ({ commit, getters }, { semesterId }) => {
     const existLectures = getters.semesters[semesterId].lectures;
-    console.info('Skip fetch lectures - already exists.');
-    if (existLectures && existLectures.length > 0) return Promise.resolve();
+    if (existLectures && existLectures.length > 0) {
+      console.info('Skip fetch lectures - already exists.');
+      return Promise.resolve();
+    }
 
     return SchoolAPI.getSemesterLectures(semesterId)
       .then((lectures) => {
@@ -17,12 +19,21 @@ export default {
         return Promise.resolve();
       });
   },
-  FETCH_ME: ({ commit }) => UserAPI.getMe()
-    .then((me) => {
-      commit('SET_ME', { me });
+  FETCH_ME: ({ commit, state }) => {
+    if (state.me !== null) {
+      console.info('Skip fetch me - already exists.');
       return Promise.resolve();
-    }),
+    }
+
+    return UserAPI.getMe()
+      .then((me) => {
+        commit('SET_ME', { me });
+        return Promise.resolve();
+      });
+  },
   LOGOUT: ({ commit }) => {
+    window.localStorage.removeItem('access_token');
+    window.localStorage.removeItem('refresh_token');
     commit('UNSET_ME');
     return Promise.resolve();
   },

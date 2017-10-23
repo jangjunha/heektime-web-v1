@@ -2,20 +2,33 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Hello from '@/components/Hello';
 import LoginForm from '@/components/LoginForm';
+import SignupForm from '@/components/SignupForm';
 import UserView from '@/views/UserView';
+import UserHomeView from '@/views/UserHomeView';
 import UserTimetableView from '@/views/UserTimetableView';
 import UserMenu from '@/components/UserMenu';
+import HomeMenu from '@/components/HomeMenu';
+import NotFoundView from '@/views/NotFoundView';
 
 Vue.use(Router);
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
-      name: 'Hello',
+      name: 'Home',
       components: {
         default: Hello,
-        menubar: null,
+        menubar: HomeMenu,
+      },
+    },
+    {
+      path: '/signup',
+      name: 'Signup',
+      components: {
+        default: SignupForm,
+        menubar: HomeMenu,
       },
     },
     {
@@ -23,7 +36,7 @@ export default new Router({
       name: 'Login',
       components: {
         default: LoginForm,
-        menubar: null,
+        menubar: HomeMenu,
       },
     },
     {
@@ -40,7 +53,7 @@ export default new Router({
         {
           path: '',
           name: 'User',
-          component: Hello,
+          component: UserHomeView,
         },
         {
           path: 'timetable/:timetable_id',
@@ -49,5 +62,6 @@ export default new Router({
         },
       ],
     },
+    { path: '*', components: { default: NotFoundView, menubar: null } },
   ],
 });

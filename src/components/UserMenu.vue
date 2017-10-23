@@ -39,7 +39,6 @@
     data() {
       return {
         internalSemester: null,
-
       };
     },
     computed: {

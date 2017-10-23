@@ -2,7 +2,7 @@
   <div class="login-form">
     <h1>로그인</h1>
 
-    <form @submit="login">
+    <form @submit.prevent="login">
       <input type="text" v-model="username" placeholder="사용자 이름">
       <input type="password" v-model="password" placeholder="비밀번호">
       <input type="submit" value="로그인">

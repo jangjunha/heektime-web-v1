@@ -1,7 +1,7 @@
 <template>
   <div class="select-menu">
     <div class="select" :class="{ disabled }" @focus="selectFocused=true" @focusout="selectFocused=false" tabindex="1">
-      <span><slot name="selected" :option="selected">선택하세요</slot> ▾ ️</span>
+      <span><slot name="selected" :option="selected">선택하세요</slot> ▾&nbsp;️</span>
     </div>
 
     <ul class="option-list" v-show="open" @mouseenter="optionFocused=true" @mouseleave="optionFocused=false">
@@ -39,22 +39,27 @@
         selected: null,
         selectFocused: false,
         optionFocused: false,
+        open: false,
       };
     },
     computed: {
-      open() {
-        return this.selectFocused || this.optionFocused;
-      },
     },
     methods: {
       selectOption(option) {
         this.selected = option;
         this.$emit('change', this.selected);
+        this.open = false;
       },
     },
     watch: {
       value() {
         this.selected = this.value;
+      },
+      selectFocused() {
+        this.open = this.selectFocused || this.optionFocused;
+      },
+      optionFocused() {
+        this.open = this.selectFocused || this.optionFocused;
       },
     },
     created() {
@@ -89,6 +94,8 @@
 
       position: absolute;
       right: 0;
+      min-width: 100%;
+      flex-shrink: 0;
 
       li {
         cursor: pointer;

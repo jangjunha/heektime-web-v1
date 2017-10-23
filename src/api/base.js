@@ -2,8 +2,7 @@
 
 import AuthAPI from './AuthAPI';
 
-// const ENDPOINT = 'https://heektime-api.heek.kr';
-const ENDPOINT = 'http://localhost:5000'; // TODO:
+const ENDPOINT = 'https://api.heektime.heek.kr';
 const BASE_URL = `${ENDPOINT}/apis/v2`;
 
 export const errorCodes = {

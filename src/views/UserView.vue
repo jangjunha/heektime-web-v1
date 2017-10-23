@@ -17,7 +17,8 @@
         return this.$route.params.username;
       },
       user() {
-        return this.$store.state.usernames[this.username];
+        const userId = this.$store.state.usernames[this.username];
+        return this.$store.state.users[userId];
       },
     },
     methods: {
