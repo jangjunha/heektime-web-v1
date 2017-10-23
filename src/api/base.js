@@ -7,6 +7,8 @@ const BASE_URL = `${ENDPOINT}/apis/v2`;
 
 export const errorCodes = {
   TOKEN_EXPIRED: 'AT003',
+  INVALID_USER_CREDENTIALS: 'AL001',
+  INVALID_REFRESH_CREDENTIALS: 'AL002',
 };
 
 

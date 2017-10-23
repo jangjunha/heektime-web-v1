@@ -12,7 +12,7 @@
 
 <script>
   import { AuthAPI } from '@/api';
-  import { setAccessToken, setRefreshToken } from '@/api/base';
+  import { errorCodes, setAccessToken, setRefreshToken } from '@/api/base';
 
   export default {
     name: 'login-form',
@@ -38,7 +38,11 @@
             });
           })
           .catch((error) => {
-            alert(`로그인 실패: ${error.message}`);
+            if (error.code === errorCodes.INVALID_USER_CREDENTIALS) {
+              alert('사용자 이름 또는 비밀번호가 잘못되었습니다.');
+            } else {
+              alert(`로그인 실패 - ${error.message}`);
+            }
           });
       },
     },
