@@ -6,6 +6,7 @@
           <router-view name="menubar"></router-view>
         </div>
         <div class="common-menu">
+          <router-link :to="{ name: 'Signup' }" v-if="!$store.state.me">회원가입</router-link>
           <router-link :to="{ name: 'Login' }" v-if="!$store.state.me">로그인</router-link>
           <a href="#" v-if="$store.state.me" @click="logout">로그아웃</a>
           <router-link :to="{ name: 'Home' }" class="logo">HeekTime</router-link>
