@@ -14,7 +14,7 @@
         @mouseenter="$emit('lecture-mouseenter', lecture)"
         @mouseleave="$emit('lecture-mouseenter', null)"
         @click="$emit('lecture-click', lecture)"
-        :class="{ overlapped: isOverlap(lecture) }"
+        :class="{ overlapped: isOverlap(lecture, filledTimes) }"
       >
         <td class="nowrap short">{{ lecture.identifier }}</td>
         <td>{{ lecture.title }}</td>
@@ -29,7 +29,7 @@
 
 <script>
   import { shortWeekdays } from '@/util/constants';
-  import { overlap } from '@/util';
+  import { isOverlap } from '@/util';
 
   export default {
     name: 'lecture-list',
@@ -48,6 +48,9 @@
       },
     },
     methods: {
+      isOverlap(lecture, filledTimes) {
+        return isOverlap(lecture, filledTimes);
+      },
       displayTime(times) {
         if (!times) return '';
 
@@ -63,26 +66,6 @@
         if (!times) return '';
 
         return Array.from(new Set(times.map(time => time.room))).join(', ');
-      },
-      isOverlap(lecture) {
-        if (!this.filledTimes) return false;
-
-        for (let i = 0; i < this.filledTimes.length; i += 1) {
-          if (!lecture.times) continue;  // eslint-disable-line no-continue
-
-          const t0 = this.filledTimes[i];
-
-          for (let j = 0; j < lecture.times.length; j += 1) {
-            const t1 = lecture.times[j];
-            if (
-              t0.weekday === t1.weekday &&
-              overlap(t0.timeBegin, t0.timeEnd, t1.timeBegin, t1.timeEnd)
-            ) {
-              return true;
-            }
-          }
-        }
-        return false;
       },
     },
   };

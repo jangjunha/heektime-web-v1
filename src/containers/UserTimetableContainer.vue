@@ -21,7 +21,7 @@
 
     <popup-modal :show="showModal" @dismiss="showModal = false" v-if="modalLecture" class="lecture-modal">
       <lecture-detail :lecture="modalLecture" class="lecture-modal-content"></lecture-detail>
-      <button class="btn-add" @click="addLecture(modalLecture)" :disabled="isOverlap(modalLecture)">시간표에 추가</button>
+      <button class="btn-add" @click="addLecture(modalLecture)" :disabled="isOverlap(modalLecture, filledTimes)">시간표에 추가</button>
     </popup-modal>
   </div>
 </template>
@@ -29,7 +29,7 @@
 <script>
   import { mapState } from 'vuex';
 
-  import { overlap } from '@/util';
+  import { isOverlap } from '@/util';
 
   import Timetable from '@/components/Timetable';
   import SearchLecture from '@/components/SearchLecture';
@@ -97,6 +97,9 @@
       }),
     },
     methods: {
+      isOverlap(lecture, filledTimes) {
+        return isOverlap(lecture, filledTimes);
+      },
       showLectureModal(lecture) {
         this.modalLecture = lecture;
         this.showModal = true;
@@ -107,23 +110,6 @@
           return;
         }
         this.previewLectures.push(lecture);
-      },
-      isOverlap(lecture) {
-        // NOTE: LectureList.isOverlap 함수에서 가져옴.
-        // TODO: clean code
-        for (let i = 0; i < this.filledTimes.length; i += 1) {
-          const t0 = this.filledTimes[i];
-          for (let j = 0; j < lecture.times.length; j += 1) {
-            const t1 = lecture.times[j];
-            if (
-              t0.weekday === t1.weekday &&
-              overlap(t0.timeBegin, t0.timeEnd, t1.timeBegin, t1.timeEnd)
-            ) {
-              return true;
-            }
-          }
-        }
-        return false;
       },
       addLecture(lecture) {
         this.$store.dispatch('ADD_LECTURE_TO_TIMETABLE', { timetableId: this.timetableId, lecture });
