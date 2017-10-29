@@ -3,12 +3,12 @@ import Router from 'vue-router';
 import Hello from '@/components/Hello';
 import LoginForm from '@/components/LoginForm';
 import SignupForm from '@/components/SignupForm';
-import UserView from '@/views/UserView';
-import UserHomeView from '@/views/UserHomeView';
-import UserTimetableView from '@/views/UserTimetableView';
+import UserContainer from '@/containers/UserContainer';
+import UserHomeContainer from '@/containers/UserHomeContainer';
+import UserTimetableContainer from '@/containers/UserTimetableContainer';
 import UserMenu from '@/components/UserMenu';
 import HomeMenu from '@/components/HomeMenu';
-import NotFoundView from '@/views/NotFoundView';
+import NotFound from '@/components/NotFound';
 
 Vue.use(Router);
 
@@ -42,7 +42,7 @@ export default new Router({
     {
       path: '/user/:username/',
       components: {
-        default: UserView,
+        default: UserContainer,
         menubar: UserMenu,
       },
       props: {
@@ -53,15 +53,15 @@ export default new Router({
         {
           path: '',
           name: 'User',
-          component: UserHomeView,
+          component: UserHomeContainer,
         },
         {
           path: 'timetable/:timetable_id',
           name: 'UserTimetable',
-          component: UserTimetableView,
+          component: UserTimetableContainer,
         },
       ],
     },
-    { path: '*', components: { default: NotFoundView, menubar: null } },
+    { path: '*', components: { default: NotFound, menubar: null } },
   ],
 });
