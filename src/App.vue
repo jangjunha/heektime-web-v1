@@ -34,7 +34,10 @@ export default {
   created() {
     if (window.localStorage.getItem('access_token') !== null) {
       this.$store.dispatch('FETCH_ME')
-        .then(() => { this.isLoaded = true; })
+        .then(() => {
+          window.gtag('set', { user_id: this.$store.state.me.id });
+          this.isLoaded = true;
+        })
         .catch(() => this.$store.dispatch('LOGOUT'));
     } else {
       this.isLoaded = true;
