@@ -56,9 +56,19 @@
 
         const formattedTimes = times.map((time) => {
           const weekday = shortWeekdays[time.weekday];
-          return time.periodBegin === time.periodEnd
-            ? `${weekday}${time.periodBegin}`
-            : `${weekday}${time.periodBegin}-${time.periodEnd}`;
+          if (time.periodBegin && time.periodEnd) {
+            return time.periodBegin === time.periodEnd
+              ? `${weekday}${time.periodBegin}`
+              : `${weekday}${time.periodBegin}-${time.periodEnd}`;
+          }
+
+          const pad = number => (`${number}`.length === 1 ? `0${number}` : `${number}`);
+
+          const beginHour = pad(Math.floor(time.timeBegin / 60));
+          const beginMinute = pad(time.timeBegin % 60);
+          const endHour = pad(Math.floor(time.timeEnd / 60));
+          const endMinute = pad(time.timeEnd % 60);
+          return `${weekday}${beginHour}:${beginMinute}-${endHour}:${endMinute}`;
         });
         return formattedTimes.join(', ');
       },

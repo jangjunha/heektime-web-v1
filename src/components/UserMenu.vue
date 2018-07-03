@@ -5,7 +5,16 @@
       <p class="profile-name">{{ username }}</p>
     </div>
     <div class="sub-menu">
-      <select-option :value="semester" :options="semesters" @change="value => selectSemester(value)">
+      <select-option :value="school" :options="schools" @change="value => selectSchool(value)">
+        <template slot="selected" scope="{ option }">
+          <template v-if="option">{{ option.name }}</template>
+          <template v-else>학교 선택</template>
+        </template>
+        <template slot="option" scope="{ option }">
+          <span>{{ option.name }}</span>
+        </template>
+      </select-option>
+      <select-option :value="semester" :options="semesters" @change="value => selectSemester(value)" :disabled="!school || semesters.length === 0">
         <template slot="selected" scope="{ option }">
           <template v-if="option">{{ option.year }}&mdash;{{ option.term }}</template>
           <template v-else>학기 선택</template>
@@ -38,10 +47,18 @@
     props: ['username', 'timetable_id'],
     data() {
       return {
+        internalSchool: null,
         internalSemester: null,
       };
     },
     computed: {
+      school() {
+        if (!this.timetable) {
+          return this.internalSchool;
+        }
+        return this.schools
+          .filter(school => this.timetable.semester.school.id === school.id)[0];
+      },
       semester() {
         if (!this.timetable) {
           return this.internalSemester;
@@ -55,14 +72,19 @@
       timetable() {
         return (this.timetable_id ? this.$store.state.timetables[this.timetable_id] : null);
       },
+      semesters() {
+        if (!this.school) return [];
+
+        return this.school.semesters;
+      },
       ...mapState({
         user(state) {
           if (!state.usernames[this.username]) return null;
           const userId = state.usernames[this.username];
           return state.users[userId];
         },
-        semesters(state) {
-          return state.schools.korea_univ_anam ? state.schools.korea_univ_anam.semesters : [];
+        schools(state) {
+          return Object.values(state.schools);
         },
         timetables(state) {
           if (!this.user) return [];
@@ -75,6 +97,9 @@
       }),
     },
     methods: {
+      selectSchool(value) {
+        this.internalSchool = value;
+      },
       selectSemester(value) {
         this.internalSemester = value;
 

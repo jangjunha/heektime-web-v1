@@ -1,7 +1,7 @@
 <template>
   <div class="user-home-container">
     <div class="section" v-if="lastSemester">
-      <h2>고려대학교(서울) {{ lastSemester.year }}&mdash;{{ lastSemester.term }} 시간표</h2>
+      <h2>{{ lastSemester.school.name }} {{ lastSemester.year }}&mdash;{{ lastSemester.term }} 시간표</h2>
       <ul v-if="lastSemesterTimetables.length > 0" class="timetable-list">
         <li v-for="timetable in lastSemesterTimetables">
           <router-link
@@ -21,7 +21,16 @@
       <div class="content">
         <h2>새 시간표</h2>
         <div class="input-group">
-          <select-option :options="semesters" class="select-semester" v-model="newTimetableSemester">
+          <select-option :options="schools" class="select-school" v-model="newTimetableSchool">
+            <template slot="selected" scope="{ option }">
+              <template v-if="option">{{ option.name }}</template>
+              <template v-else>학교 선택</template>
+            </template>
+            <template slot="option" scope="{ option }">
+              <span>{{ option.name }}</span>
+            </template>
+          </select-option>
+          <select-option :options="newTimetableSchool ? newTimetableSchool.semesters : []" class="select-semester" v-model="newTimetableSemester">
             <template slot="selected" scope="{ option }">
               <template v-if="option">{{ option.year }}&mdash;{{ option.term }}</template>
               <template v-else>학기 선택</template>
@@ -58,6 +67,7 @@
         isLoaded: false,
         showModal: false,
 
+        newTimetableSchool: null,
         newTimetableSemester: null,
         newTimetableTitle: '',
       };
@@ -75,18 +85,29 @@
         return this.$store.state.users[userId];
       },
       lastSemester() {
-        const sorted = [...this.semesters]
+        const sorted = [...this.userSemesters]
           .sort((a, b) => (a.year !== b.year ? a.year < b.year : a.semester < b.semester));
         return sorted[0];
       },
       lastSemesterTimetables() {
         return this.timetables.filter(timetable => timetable.semester.id === this.lastSemester.id);
       },
+      userSemesters() {
+        return this.timetables
+          .map(timetable => timetable.semester)
+          .reduce((res, semester) => {
+            if (res.filter(r => r.id === semester.id).length > 0) return res;
+            return [...res, semester];
+          }, []);
+      },
       ...mapState({
         user(state) {
           if (!state.usernames[this.username]) return null;
           const userId = state.usernames[this.username];
           return state.users[userId];
+        },
+        schools(state) {
+          return Object.values(state.schools);
         },
         semesters(state) {
           return state.schools.korea_univ_anam ? state.schools.korea_univ_anam.semesters : [];
@@ -175,7 +196,7 @@
       .content {
         padding: 8px;
 
-        input[type=text], .select-semester {
+        input[type=text], .select-school, .select-semester {
           box-sizing: border-box;
           font-size: 16pt;
           width: 100%;

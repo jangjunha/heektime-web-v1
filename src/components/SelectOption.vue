@@ -97,6 +97,8 @@
       min-width: 100%;
       flex-shrink: 0;
 
+      z-index: 999;
+
       li {
         cursor: pointer;
 
