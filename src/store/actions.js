@@ -57,8 +57,8 @@ export default {
 
   ADD_LECTURE_TO_TIMETABLE: ({ commit }, { timetableId, lecture }) =>
     UserAPI.addLectureToUserTimetable(timetableId, lecture)
-      .then(() => {
-        commit('ADD_LECTURE_TO_TIMETABLE', { timetableId, lecture });
+      .then((result) => {
+        commit('ADD_LECTURE_TO_TIMETABLE', { timetableId, lecture: result });
         return Promise.resolve();
       }),
   DELETE_LECTURE_FROM_TIMETABLE: ({ commit }, { timetableId, lectureId }) =>
