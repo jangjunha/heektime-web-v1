@@ -86,7 +86,7 @@
       },
       lastSemester() {
         const sorted = [...this.userSemesters]
-          .sort((a, b) => (a.year !== b.year ? a.year < b.year : a.semester < b.semester));
+          .sort((a, b) => (a.year !== b.year ? a.year < b.year : a.term < b.term));
         return sorted[0];
       },
       lastSemesterTimetables() {
